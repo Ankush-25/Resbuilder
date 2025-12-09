@@ -1,0 +1,34 @@
+{
+  "name": "backendresbuilder",
+  "version": "1.0.0",
+  "description": "Backend of Resume builder",
+  "license": "ISC",
+  "author": "Ankit bhandari",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx watch src/index.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.6",
+    "dotenv": "^17.2.3",
+    "pino-pretty": "^13.1.3",
+    "prisma": "^7.1.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0",
+    "cors": "^2.8.5",
+    "pg": "^8.16.3",
+    "pino": "^10.1.0"
+  }
+}

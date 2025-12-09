@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  password_hash   String
+  full_name       String?
+  phone           String?
+  location        String?
+  linkedin_url    String?
+  portfolio_url   String?
+  summary         String?
+  avatar_url      String?
+  email_verified  Boolean  @default(false)
+  is_active       Boolean  @default(true)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Relations
+  sessions        UserSession[]
+  education       Education[]
+  documents       Document[]
+  experiences     Experience[]
+  skills          Skill[]
+  resumes         Resume[]
+  resume_exports  ResumeExport[]
+}
+
+model UserSession {
+  id          String   @id @default(cuid())
+  user_id     String
+  token_hash  String   @unique
+  expires_at  DateTime
+  ip_address  String?
+  user_agent  String?
+  created_at  DateTime @default(now())
+
+  user        User     @relation(fields: [user_id], references: [id])
+}
+
+model Education {
+  id             String   @id @default(cuid())
+  user_id        String
+  institution    String
+  degree         String?
+  field_of_study String?
+  start_date     DateTime?
+  end_date       DateTime?
+  gpa            Decimal?
+  description    String?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  user           User     @relation(fields: [user_id], references: [id])
+}
+
+model Document {
+  id                String   @id @default(cuid())
+  user_id           String
+  original_filename String
+  file_url          String
+  file_size         Int?
+  file_type         String   @default("application/pdf")
+  parsed_data       Json     @default("{}")
+  parsing_status    String   @default("pending")
+  parsing_error     String?
+  upload_source     String   @default("web")
+  is_processed      Boolean  @default(false)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  user              User     @relation(fields: [user_id], references: [id])
+}
+
+model Experience {
+  id          String   @id @default(cuid())
+  user_id     String
+  company     String
+  job_title   String
+  location    String?
+  start_date  DateTime
+  end_date    DateTime?
+  is_current  Boolean  @default(false)
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user        User     @relation(fields: [user_id], references: [id])
+}
+
+model ResumeTemplate {
+  id            String   @id @default(cuid())
+  name          String
+  description   String?
+  thumbnail_url String?
+  preview_html  String?
+  category      String   @default("Modern")
+  is_premium    Boolean  @default(false)
+  price         Decimal  @default(0)
+  config        Json     @default("{}")
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  resumes       Resume[]
+}
+
+model Resume {
+  id              String   @id @default(cuid())
+  user_id         String
+  template_id     String
+  title           String   @default("My Resume")
+  slug            String?  @unique
+  content         Json     @default("{}")
+  config          Json     @default("{}")
+  is_public       Boolean  @default(false)
+  public_url      String?  @unique
+  view_count      Int      @default(0)
+  download_count  Int      @default(0)
+  last_viewed_at  DateTime?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  user            User            @relation(fields: [user_id], references: [id])
+  template        ResumeTemplate  @relation(fields: [template_id], references: [id])
+  resume_exports  ResumeExport[]
+}
+
+model Skill {
+  id              String   @id @default(cuid())
+  user_id         String
+  skill_name      String
+  proficiency     String?
+  category        String   @default("Technical")
+  years_experience Int?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  user            User     @relation(fields: [user_id], references: [id])
+}
+
+model ResumeExport {
+  id            String   @id @default(cuid())
+  resume_id     String
+  user_id       String
+  file_format   String
+  file_url      String
+  file_size     Int?
+  download_count Int     @default(0)
+  generated_at  DateTime @default(now())
+
+  resume        Resume   @relation(fields: [resume_id], references: [id])
+  user          User     @relation(fields: [user_id], references: [id])
+}
