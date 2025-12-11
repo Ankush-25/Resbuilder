@@ -1,3 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-export default prisma;
+import { PrismaClient } from '@prisma/client';
+import {PrismaPg} from '@prisma/adapter-pg';
+import pool from './db.js';
+
+
+const adapter = new PrismaPg(pool);
+export const prisma = new PrismaClient({adapter});

@@ -6,15 +6,24 @@ import { log } from "./logger/Logger.ts";
 import { mainRouter } from "./routers/main.router.ts";
 import http from "http";
 import { corsOptions } from "./configs/global.config.js";
-import prisma from "./lib/prisma.ts";
+import { prisma } from "./lib/prisma.ts";
+import { getError } from "./utils/errorHandler.js";
 
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT);
 async function startServer() {
   try {
     //for more constomization
     // use this when to remove the prisma
     //  await connectDB();
-    await prisma.$connect();
+    try {
+      await prisma.$connect();
+      log.info("Postgres Database successfully connected");
+    } catch (error) {
+      const message = getError(error);
+      log.error(`CRITICAL: Database connection failed - ${message}`);
+      process.exit(1);
+    }
+
     const app = express();
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -23,10 +32,8 @@ async function startServer() {
     app.use(mainRouter);
     httpServer.listen(PORT, "0.0.0.0", () => {
       log.info(`Server is running on port ${PORT}`);
-      console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.log("Server is Unable to start", error);
     log.error("server is Unable to start", error as Error);
   }
 }

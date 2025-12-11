@@ -4,11 +4,12 @@ import dotenv from 'dotenv';
 import type { QueryResultRow } from "pg";
 import { log } from "../logger/Logger.js";
 dotenv.config();
-if (!process.env.POSTGRES_URI) {
-  throw new Error("POSTGRES_URI is not defined in environment variables");
+if (!process.env.DATABASE_URL
+) {
+  throw new Error("DATABASE_URL is not defined in environment variables");
 }
  const pool = new Pool({
-  connectionString: process.env.POSTGRES_URI,
+  connectionString: process.env.DATABASE_URL,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
@@ -22,7 +23,6 @@ export const query = <T extends QueryResultRow>(text: string, params?: unknown[]
 export async function connectDB(): Promise<void> {
   const client = await pool.connect();
   try {
-    const
     const res = await client.query("SELECT NOW()");
     console.log("Postgres successfully connected", res.rows[0].now);
     log.info("Postgres successfully connected", res.rows[0].now);
