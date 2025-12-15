@@ -1,6 +1,6 @@
 import express from "express";
 import { userRouter } from "./user.router.ts";
-import { basepath } from "../configs/global.config.js";
+import { basepath } from "../configs/global.config.ts";
 const mainRouter = express.Router();
 
 mainRouter.use(userRouter);

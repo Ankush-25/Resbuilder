@@ -5,7 +5,7 @@ import { log } from "../logger/Logger.ts";
 import { getError } from "../utils/errorHandler.ts";
 
 type UserCreateData = Prisma.UserCreateInput;
-export class UserRepository {
+export class UserRepository {  
   //create news user
   async create(data: UserCreateData): Promise<User> {
     try {
