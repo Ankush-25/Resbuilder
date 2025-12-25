@@ -16,10 +16,11 @@ export const genrateToken = (
   return jwt.sign(payload, key, options);
 };
 
-export const verifyAuthToken = (Token: string): string | JwtPayload => {
+export const verifyAuthToken = (Token: string,refresh:boolean=false): string | JwtPayload => {
+  const secret:string= refresh?process.env.REFRESH_TOKEN_SECRET as string: process.env.ACCESS_TOKEN_SECRET as string
   const decoded: string | JwtPayload = jwt.verify(
     Token,
-    process.env.REFRESH_TOKEN_SECRET as string
+    secret
   );
   return decoded;
 };

@@ -7,7 +7,7 @@ export class PasswordUtil {
   public static async hashPassword(password: string): Promise <string> {
     try {
       const salt = await genSalt(this.Salt_Round);
-      console.log(salt,password)
+      console.log("salt",salt,"Password",password)
       const hashPassword = await hash(password, salt);
       return hashPassword;
     } catch (error) {

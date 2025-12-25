@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { userRepository } from "../repositories/UserRepository.ts";
+import { UserRepository, userRepository } from "../repositories/UserRepository.ts";
 import { PasswordUtil } from "../utils/passwordHelperClass.ts";
 import { getError } from "../utils/errorHandler.ts";
 import { log } from "../logger/Logger.ts";
@@ -33,13 +33,16 @@ export const logIn = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       success: "true",
       message: "Login successfully",
-      user: { id: user?.id, email: user?.email },
+      user: { id: user?.id},
       token: token,
     });
     return;
   } catch (error) {
     log.error("unable to Login", error as Error);
-    throw new Error("unable to Login", getError(error));
+    res.status(401).json({
+      success: "false",
+      message: "Unable to Login",
+    });
   }
 };
 
@@ -84,6 +87,30 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     return;
   } catch (error) {
     log.error("unable to create the user", error as Error);
-    throw new Error("Unable to register", getError(error));
+   res.status(400).json({ success: "false", message: "Unable to register"});
   }
 };
+
+export const getProfile = async(req:Request, res:Response):Promise<void>=>{
+  const {id} =req.params;
+  if(!id){
+    res.status(400).json({
+      success: "false",
+      message: "ID parameter is required" 
+    })
+    return
+  }
+  try {
+    const UserDetails = await userRepository.findById(id)
+    res.status(200).json({
+      success:"True",
+      message:"User Fetched successfully",
+      user:UserDetails
+    })
+    return
+  } catch (error) {
+    log.error("unable to Send the User Data to the client ",error as Error);
+    res.status(400).json({ success: "false", message: "Unable to Find the User "});
+  }
+
+}

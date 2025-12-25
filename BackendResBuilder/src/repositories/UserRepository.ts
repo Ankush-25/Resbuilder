@@ -5,7 +5,7 @@ import { log } from "../logger/Logger.ts";
 import { getError } from "../utils/errorHandler.ts";
 
 type UserCreateData = Prisma.UserCreateInput;
-export class UserRepository {  
+export class UserRepository {
   //create news user
   async create(data: UserCreateData): Promise<User> {
     try {
@@ -20,7 +20,7 @@ export class UserRepository {
     }
   }
 
-  async findByEmail(data: string): Promise<User|null> {
+  async findByEmail(data: string): Promise<User | null> {
     try {
       const user = await prisma.user.findUnique({
         where: {
@@ -29,8 +29,25 @@ export class UserRepository {
       });
       return user;
     } catch (error) {
-        log.error("unable to Find user", error as Error);
-        throw new Error("unable to find user", getError(error))
+      log.error("unable to Find user", error as Error);
+      throw new Error("unable to find user", getError(error));
+    }
+  }
+  async findById(userId: string): Promise<User | null> {
+     if (!userId) {
+        return null;
+      }
+    try {
+      const trimmedId = userId.trim();
+      const user = await prisma.user.findUnique({
+        where: {
+          id: trimmedId,
+        },
+      });
+      return user;
+    } catch (error) {
+      log.error("unable to Find user by ID", error as Error);
+      throw new Error("unable to find user", getError(error));
     }
   }
 }

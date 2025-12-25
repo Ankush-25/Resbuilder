@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { Layout } from './layout/layout';
+import { Login } from './Components/login';
+import { SignUp } from './Components/signUp';
+import { ForgotPassword } from './Components/forgotpassword';
+import { Dashboard } from './dashboard/Dashboard';
+import { Profile } from './Profile/profile';
+import { Feature } from './landingPage/Feature';
+import { Pricing } from './landingPage/pricing';
+import { AboutUs } from './landingPage/aboutus';
+import { TemplateGallery } from './landingPage/template';
+import { PrivacyPolicy } from './landingPage/privacy';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const app = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/Login' element={<Login />} />
+        <Route path='/Signup' element={<SignUp />} />
+        <Route path='/ForgotPassword' element={<ForgotPassword />} />
+        <Route path='/app' element={<Dashboard />} />
+        <Route path='/profile' element={<Profile />} />
+      </Routes>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="features" element={<Feature />} />
+          <Route path="pricing" element={<Pricing />} />
+          <Route path="about" element={<AboutUs />} />
+          <Route path="templates" element={<TemplateGallery />} />
+          <Route path="privacy" element={<PrivacyPolicy />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
-}
+};
+export default app;
 
-export default App

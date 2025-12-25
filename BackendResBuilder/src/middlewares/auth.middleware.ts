@@ -4,18 +4,21 @@ import { log } from "../logger/Logger.js";
 
 const authChecker = (req:Request,res:Response, next:NextFunction):void=>{
     try {
-        const authHeader = req.header("Authorization");
+        const authHeader = req.headers.authorization
         if  (!authHeader){
-            res.status(400).json({success: "false",message:"Auth Token is not Provided!"});
+            res.status(401).json({success: false,message:"Auth Token is not Provided!"});
             return;
         }
-        const token:string = authHeader.replace("Bearer ",'').trim();
+        
+        const token:string = authHeader.replace("Bearer ","").trim();
         const decoded = verifyAuthToken(token)
-        req.user= decoded
+        req.user = decoded
         next()
     } catch (error) { 
         log.error("InvalidToken",error as Error)
-        res.status(401).json({ success:"false",message: 'Invalid token' });
+        res.status(401).json({ success:false ,message: 'Invalid token' });
     }
 
 }
+
+export {authChecker}

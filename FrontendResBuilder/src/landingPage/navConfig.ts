@@ -1,0 +1,1 @@
+export const menus: <Array>=["Features", "Templates", "Pricing"]

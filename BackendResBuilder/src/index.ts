@@ -23,7 +23,6 @@ async function startServer() {
       log.error(`CRITICAL: Database connection failed - ${message}`);
       process.exit(1);
     }
-
     const app = express();
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
